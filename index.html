@@ -200,7 +200,19 @@ footer { text-align: center; padding: 60px 24px; background: var(--white); borde
 .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.8s, transform 0.8s; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+.mobile-rsvp-btn {
+  display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 998; background: var(--carpet-pink); color: white;
+  text-decoration: none; font-family: 'Jost', sans-serif;
+  font-size: 0.8rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 14px 32px; border-radius: 100px;
+  box-shadow: 0 6px 24px rgba(200,72,120,0.35);
+  transition: all 0.3s;
+}
+.mobile-rsvp-btn:hover { background: #B83868; transform: translateX(-50%) translateY(-2px); box-shadow: 0 10px 32px rgba(200,72,120,0.4); }
+
 @media (max-width: 768px) {
+  .mobile-rsvp-btn { display: block; }
   .nav-links { display: none; } .hamburger { display: flex; }
   .hero { padding: 90px 20px 60px; min-height: 100svh; }
   section { padding: 72px 20px; }
@@ -574,7 +586,6 @@ if (sessionStorage.getItem('pinningdownace_auth') === 'true') {
     <div class="form-group">
       <label>Which events will you attend?</label>
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
-        <label class="checkbox-item"><input type="checkbox" value="morning"> Morning Ceremony — <em style="font-size:0.82em; color:var(--text-light)">Please select only if you are a bridesmaid or groomsman</em></label>
         <label class="checkbox-item"><input type="checkbox" value="evening"> Evening Celebration</label>
         <label class="checkbox-item"><input type="checkbox" value="afterparty"> Afterparty</label>
       </div>
@@ -602,6 +613,8 @@ if (sessionStorage.getItem('pinningdownace_auth') === 'true') {
   <p class="rsvp-note">Please RSVP by October 1, 2026</p>
 </div></section>
 
+<a href="#rsvp" class="mobile-rsvp-btn" id="mobileRsvpBtn">RSVP Now</a>
+
 <footer>
   <div class="footer-names">Pin & Ace</div>
   <div class="footer-date">November 1, 2026 &nbsp;·&nbsp; Bangkok, Thailand</div>
@@ -622,7 +635,9 @@ updateCountdown(); setInterval(updateCountdown,1000);
 const pc=document.getElementById('petals'),cols=['#F2D1D8','#FADCD0','#F5F0C8','#D8E8C4','#C8D8F0','#D8CCE8'];
 for(let i=0;i<20;i++){const p=document.createElement('div');p.className='petal';const s=8+Math.random()*16;Object.assign(p.style,{width:s+'px',height:s+'px',left:Math.random()*100+'%',background:cols[Math.floor(Math.random()*cols.length)],animationDelay:Math.random()*18+'s',animationDuration:(14+Math.random()*10)+'s'});pc.appendChild(p);}
 
-window.addEventListener('scroll',()=>{document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>50);let c='';document.querySelectorAll('section[id]').forEach(s=>{if(scrollY>=s.offsetTop-100)c=s.id});document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+c)})});
+window.addEventListener('scroll',()=>{document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>50);let c='';document.querySelectorAll('section[id]').forEach(s=>{if(scrollY>=s.offsetTop-100)c=s.id});document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+c)});
+// Hide mobile RSVP button when near RSVP section or at top of page
+const rsvpSection=document.getElementById('rsvp');const rsvpBtn=document.getElementById('mobileRsvpBtn');if(rsvpBtn&&rsvpSection){const rsvpTop=rsvpSection.offsetTop;const scrollPos=window.scrollY+window.innerHeight;if(scrollPos>rsvpTop||window.scrollY<100){rsvpBtn.style.opacity='0';rsvpBtn.style.pointerEvents='none'}else{rsvpBtn.style.opacity='1';rsvpBtn.style.pointerEvents='auto'}}});
 function toggleMenu(){document.getElementById('hamburger').classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('show');document.body.style.overflow=document.getElementById('mobileMenu').classList.contains('show')?'hidden':''}
 function closeMenu(){document.getElementById('hamburger').classList.remove('open');document.getElementById('mobileMenu').classList.remove('show');document.body.style.overflow=''}
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.1});document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
